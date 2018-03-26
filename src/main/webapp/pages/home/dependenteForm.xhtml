@@ -1,0 +1,91 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+
+	<p:dialog id="dependeteFormDialog" modal="true"
+		widgetVar="dependenteFormDialog" closable="true" draggable="false"
+		width="800" height="200" header="Dependente" showEffect="clip"
+		resizable="true" hideEffect="clip">
+		<h:form id="dependenteForm">
+
+			<p:messages id="messages" showDetail="false" closable="true"
+				autoUpdate="true" />
+
+			<div class="ui-fluid">
+
+				<p:panelGrid columns="1" columnClasses="ui-grid-col-12"
+					layout="grid" styleClass="ui-panelgrid-blank">
+
+					<p:panelGrid columns="2"
+						columnClasses="ui-grid-col-2,ui-grid-col-10" layout="grid"
+						styleClass="ui-panelgrid-blank">
+						<p:outputLabel for="nomeDependente" value="Nome" />
+						<p:inputText id="nomeDependente"
+							value="#{pessoaFisicaController.dependenteForm.dependente.nome}"
+							required="true" requiredMessage="Nome é um campo obrigatório"
+							maxlength="150" />
+
+					</p:panelGrid>
+
+				</p:panelGrid>
+
+
+				<p:panelGrid columns="3" columnClasses="ui-grid-col-6,ui-grid-col-6"
+					layout="grid" styleClass="ui-panelgrid-blank">
+
+					<p:panelGrid columns="2"
+						columnClasses="ui-grid-col-4,ui-grid-col-8" layout="grid"
+						styleClass="ui-panelgrid-blank">
+						<p:outputLabel for="dataNascimentoDependente"
+							value="Data de Nascimento" />
+						<p:calendar id="dataNascimentoDependente" pattern="dd/MM/yyyy"
+							mask="true" required="true"
+							requiredMessage="Data de nascimento é um campo obrigatório"
+							locale="pt_BR"
+							value="#{pessoaFisicaController.dependenteForm.dependente.dataNascimento}"
+							showOn="button" />
+					</p:panelGrid>
+					<p:panelGrid columns="2"
+						columnClasses="ui-grid-col-4,ui-grid-col-8" layout="grid"
+						styleClass="ui-panelgrid-blank">
+						<p:outputLabel for="tipoDependencia" value="Tipo de dependência" />
+						<p:selectOneMenu id="tipoDependencia" converter="entityConverter"
+							value="#{pessoaFisicaController.dependenteForm.tipoDependencia}"
+							required="true"
+							requiredMessage="Tipo de dependência é um campo obrigatório">
+							<f:selectItem itemLabel="" itemValue="" noSelectionOption="true" />
+							<f:selectItems
+								value="${tipoDependenciaController.tiposDependencia}" var="t"
+								itemLabel="#{t.descricao}" itemValue="#{t}" />
+						</p:selectOneMenu>
+					</p:panelGrid>
+				</p:panelGrid>
+
+				<p:spacer />
+
+				<p:panelGrid columns="2" columnClasses="ui-grid-col-6,ui-grid-col-6"
+					layout="grid" styleClass="ui-panelgrid-blank">
+
+					<p:commandButton value="Fechar"
+						action="#{pessoaFisicaController.limparDependenteForm()}"
+						immediate="true" update="@form"
+						oncomplete="PF('dependenteFormDialog').hide();" />
+
+					<p:commandButton value="Confirmar" update="@form pessoaFisicaForm"
+						rendered="#{pessoaFisicaController.dependenteForm.id ne null}"
+						process="@form @this"
+						action="#{pessoaFisicaController.hideDependenteModal()}" />
+
+					<p:commandButton value="Adicionar" update="@form pessoaFisicaForm"
+						rendered="#{pessoaFisicaController.dependenteForm.id eq null}"
+						process="@form @this"
+						action="#{pessoaFisicaController.addDependente()}" />
+
+				</p:panelGrid>
+			</div>
+
+		</h:form>
+	</p:dialog>
+</ui:composition>

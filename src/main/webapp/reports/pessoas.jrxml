@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="pessoas" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="9a01f057-0531-4560-b36d-88eb61fef2f6">
+	<property name="ireport.zoom" value="1.4641000000000006"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="subreportdir" class="java.lang.String"/>
+	<field name="nome" class="java.lang.String"/>
+	<field name="municipio.nome" class="java.lang.String"/>
+	<field name="municipio.unidadeFederativa.sigla" class="java.lang.String"/>
+	<field name="tipoPessoa.descricao" class="java.lang.String"/>
+	<field name="dataNascimento" class="java.util.Date"/>
+	<field name="dependentes" class="java.util.List"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="54" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="14" width="555" height="31" uuid="05ec03a3-af5b-4718-b32b-10c9d3eb0fe5"/>
+				<textElement textAlignment="Center">
+					<font size="18" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["CADASTRO CORPORATIVO"]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="20" splitType="Stretch">
+			<rectangle>
+				<reportElement x="0" y="0" width="79" height="20" uuid="1b2bdb6b-8e2f-44f7-a435-033d214b5f4a"/>
+			</rectangle>
+			<textField>
+				<reportElement x="10" y="0" width="59" height="20" uuid="e7b6bc07-8dfd-4382-a88f-fb35a26bdaa4"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA["TIPO"]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement x="79" y="0" width="190" height="20" uuid="074404c3-b32d-4e45-a9ed-2b47c76db4d4"/>
+			</rectangle>
+			<textField>
+				<reportElement x="79" y="0" width="174" height="20" uuid="9cb9ea96-46a2-4f90-a0e1-011db301b396"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA["NOME/RAZÃO SOCIAL"]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement x="269" y="0" width="132" height="20" uuid="6bff05ab-a29e-41e3-a62e-3ffa8886297f"/>
+			</rectangle>
+			<textField>
+				<reportElement x="277" y="0" width="112" height="20" uuid="342c613e-d163-4769-919f-80c8c69e6b70"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["NASCIMENTO/FUNDAÇÃO"]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement x="401" y="0" width="41" height="20" uuid="635f0090-7be1-4ec2-923b-886ece487096"/>
+			</rectangle>
+			<textField>
+				<reportElement x="407" y="0" width="29" height="20" uuid="fc62007f-e8bb-4cea-9f63-954f673454c2"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA["UF"]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement x="442" y="0" width="113" height="20" uuid="dd7ea4a7-fa92-4208-9963-40fa41775aad"/>
+			</rectangle>
+			<textField>
+				<reportElement x="452" y="0" width="91" height="20" uuid="61c0436a-b7a0-44d3-80ea-4577e5767b03"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA["MUNICÍPIO"]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<rectangle>
+				<reportElement x="0" y="0" width="79" height="20" uuid="daaaa6e6-d03f-4e37-bd17-31a9c4b93a08"/>
+			</rectangle>
+			<textField isBlankWhenNull="true">
+				<reportElement x="0" y="0" width="79" height="20" uuid="775312a6-8a8f-4e27-a548-330cbddb1c6d"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{tipoPessoa.descricao}]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement x="79" y="0" width="190" height="20" uuid="97c1c95b-3610-4305-b682-762937f2c286"/>
+			</rectangle>
+			<textField isBlankWhenNull="true">
+				<reportElement x="79" y="0" width="190" height="20" uuid="a2b1520c-5fba-47c7-97e6-6909ad0376b4"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{nome}]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement x="269" y="0" width="132" height="20" uuid="b078760d-ad46-4d3b-abda-16da84ac9529"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="401" y="0" width="41" height="20" uuid="81110861-bd18-455b-8747-90745ea3da67"/>
+			</rectangle>
+			<textField isBlankWhenNull="true">
+				<reportElement x="401" y="0" width="41" height="20" uuid="6da0306d-855f-4545-8a80-a008070fcea5"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{municipio.unidadeFederativa.sigla}]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement x="442" y="0" width="113" height="20" uuid="eb94198c-6a48-4c31-8600-7d21ff6c94aa"/>
+			</rectangle>
+			<textField isBlankWhenNull="true">
+				<reportElement x="442" y="0" width="113" height="20" uuid="adf9da10-47e1-442d-8007-de3fa9afb7fd"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{municipio.nome}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="269" y="0" width="132" height="20" uuid="cc02bd33-bf79-4ff4-a2b0-fa870bf0a89d"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[new SimpleDateFormat("dd/MM/yyyy").format($F{dataNascimento})]]></textFieldExpression>
+			</textField>
+			<subreport>
+				<reportElement mode="Opaque" x="0" y="20" width="452" height="0" uuid="77de0702-80d0-4e59-af7e-c175b63c6dfa">
+					<printWhenExpression><![CDATA[!$F{dependentes}.isEmpty()]]></printWhenExpression>
+				</reportElement>
+				<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{dependentes})]]></dataSourceExpression>
+				<subreportExpression><![CDATA[$P{subreportdir}]]></subreportExpression>
+			</subreport>
+		</band>
+	</detail>
+</jasperReport>

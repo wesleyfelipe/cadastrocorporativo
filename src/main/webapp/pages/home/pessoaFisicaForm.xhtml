@@ -1,0 +1,154 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:include src="/pages/home/dependenteForm.xhtml" />
+
+	<p:dialog id="pessoaFisicaFormDialog" modal="true"
+		widgetVar="pessoaFisicaFormDialog" closable="true" draggable="false"
+		width="800" height="400" header="Pessoa Física" showEffect="clip"
+		resizable="true" hideEffect="clip">
+		<h:form id="pessoaFisicaForm">
+
+			<p:messages id="messages" showDetail="false" closable="true"
+				autoUpdate="true" />
+
+			<div class="ui-fluid">
+
+				<p:panelGrid columns="1" columnClasses="ui-grid-col-12"
+					layout="grid" styleClass="ui-panelgrid-blank">
+
+					<p:panelGrid columns="2"
+						columnClasses="ui-grid-col-2,ui-grid-col-10" layout="grid"
+						styleClass="ui-panelgrid-blank">
+						<p:outputLabel for="nomePessoaFisica" value="Nome" />
+						<p:inputText id="nomePessoaFisica"
+							value="#{pessoaFisicaController.pessoaFisicaForm.nome}"
+							required="true"
+							requiredMessage="Razão Social é um campo obrigatório"
+							maxlength="150" />
+
+					</p:panelGrid>
+				</p:panelGrid>
+
+				<p:panelGrid columns="3"
+					columnClasses="ui-grid-col-4,ui-grid-col-4,ui-grid-col-4"
+					layout="grid" styleClass="ui-panelgrid-blank">
+
+					<p:panelGrid columns="2"
+						columnClasses="ui-grid-col-4,ui-grid-col-8" layout="grid"
+						styleClass="ui-panelgrid-blank">
+						<p:outputLabel for="dataFundacaoPessoaFisica"
+							value="Data de Nascimento" />
+						<p:calendar id="dataFundacaoPessoaFisica" 
+							mask="true" required="true" maxdate="calwidget.today()"
+							requiredMessage="Data de nascimento é um campo obrigatório"
+							locale="pt_BR"
+							value="#{pessoaFisicaController.pessoaFisicaForm.dataNascimento}"
+							showOn="button" />
+					</p:panelGrid>
+					<p:panelGrid columns="2"
+						columnClasses="ui-grid-col-4,ui-grid-col-8" layout="grid"
+						styleClass="ui-panelgrid-blank">
+						<p:outputLabel for="ufPessoaFisica" value="UF" />
+						<p:selectOneMenu id="ufPessoaFisica" converter="entityConverter"
+							value="#{pessoaFisicaController.pessoaFisicaForm.uf}">
+							<f:selectItem itemLabel="" itemValue="" noSelectionOption="true" />
+							<f:selectItems
+								value="${unidadeFederativaController.unidadesFederativas}"
+								var="un" itemLabel="#{un.sigla}" itemValue="#{un}" />
+							<p:ajax event="change" process="ufPessoaFisica"
+								listener="#{pessoaFisicaController.limparMunicipioForm()}"
+								update="municipioPessoaFisica" />
+						</p:selectOneMenu>
+					</p:panelGrid>
+					<p:panelGrid columns="2"
+						columnClasses="ui-grid-col-4,ui-grid-col-8" layout="grid"
+						styleClass="ui-panelgrid-blank">
+						<p:outputLabel for="municipioPessoaFisica" value="Município" />
+						<p:selectOneMenu id="municipioPessoaFisica"
+							required="#{pessoaFisicaController.pessoaFisicaForm.uf ne null}"
+							requiredMessage="Município é um campo obrigatório"
+							value="#{pessoaFisicaController.pessoaFisicaForm.municipio}"
+							converter="entityConverter">
+							<f:selectItem itemLabel="" itemValue="" noSelectionOption="true" />
+							<f:selectItems
+								value="${municipioController.findAll(pessoaFisicaController.pessoaFisicaForm.uf)}"
+								var="mun" itemLabel="#{mun.nome}" itemValue="#{mun}" />
+						</p:selectOneMenu>
+					</p:panelGrid>
+
+				</p:panelGrid>
+
+				<p:spacer />
+
+
+				<p:panelGrid columns="1" columnClasses="ui-grid-col-4" layout="grid"
+					styleClass="ui-panelgrid-blank">
+
+					<p:commandButton value="Adicionar dependente" immediate="true"
+						action="#{pessoaFisicaController.limparDependenteForm()}"
+						oncomplete="PF('dependenteFormDialog').show();"
+						update="dependenteForm" />
+
+				</p:panelGrid>
+
+				<p:spacer />
+
+
+				<p:dataTable var="d" emptyMessage="Nenhuma dependente encontrado"
+					value="#{pessoaFisicaController.pessoaFisicaForm.dependentes}"
+					reflow="true" rowKey="#{d.id}" lazy="true" paginator="true"
+					paginatorPosition="bottom" rows="15">
+					<f:facet name="header">
+				        Dependentes
+				    </f:facet>
+					<p:column headerText="Tipo" width="20%">
+						<h:outputText value="#{d.tipoDependencia.descricao}" />
+					</p:column>
+					<p:column headerText="Nome">
+						<h:outputText value="#{d.dependente.nome}" />
+					</p:column>
+					<p:column headerText="Nascimento" width="20%">
+						<h:outputText value="#{d.dependente.dataNascimento.time}">
+							<f:convertDateTime pattern="dd/MM/yyyy" />
+						</h:outputText>
+					</p:column>
+					<p:column headerText="Ações">
+
+						<p:panelGrid columns="2"
+							columnClasses="ui-grid-col-6,ui-grid-col-6" layout="grid"
+							styleClass="ui-panelgrid-blank">
+
+							<p:commandButton value="Remover"
+								action="#{pessoaFisicaController.removeDependente(d)}"
+								update="@form" process="@this" />
+							<p:commandButton value="Editar"
+								oncomplete="PF('dependenteFormDialog').show();"
+								update="dependenteForm @form"
+								action="#{pessoaFisicaController.editDependente(d)}" />
+						</p:panelGrid>
+
+					</p:column>
+				</p:dataTable>
+
+				<p:spacer />
+
+				<p:panelGrid columns="2" columnClasses="ui-grid-col-6,ui-grid-col-6"
+					layout="grid" styleClass="ui-panelgrid-blank">
+
+					<p:commandButton value="Fechar"
+						action="#{pessoaFisicaController.limparForm()}" immediate="true"
+						oncomplete="PF('pessoaFisicaFormDialog').hide();" />
+
+					<p:commandButton value="Salvar" update="@form formPessoas"
+						action="#{pessoaFisicaController.salvarPessoa()}" />
+
+				</p:panelGrid>
+			</div>
+
+		</h:form>
+	</p:dialog>
+</ui:composition>

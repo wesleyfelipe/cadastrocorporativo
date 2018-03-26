@@ -1,0 +1,99 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+
+	<p:dialog id="pessoaJuridicaFormDialog" modal="true"
+		widgetVar="pessoaJuridicaFormDialog" closable="true" draggable="false"
+		width="800" height="400" header="Pessoa Jurídica" showEffect="clip"
+		resizable="true" hideEffect="clip">
+		<h:form id="pessoaJuridicaForm">
+
+			<p:messages id="messages" showDetail="false" closable="true"
+				autoUpdate="true" />
+
+			<div class="ui-fluid">
+
+				<p:panelGrid columns="1" columnClasses="ui-grid-col-12"
+					layout="grid" styleClass="ui-panelgrid-blank">
+
+					<p:panelGrid columns="2"
+						columnClasses="ui-grid-col-2,ui-grid-col-10" layout="grid"
+						styleClass="ui-panelgrid-blank">
+						<p:outputLabel for="nomePessoaJuridica" value="Razão Social" />
+						<p:inputText id="nomePessoaJuridica"
+							value="#{pessoaJuridicaController.pessoaJuridicaForm.razaoSocial}"
+							required="true"
+							requiredMessage="Razão Social é um campo obrigatório"
+							maxlength="150" />
+
+					</p:panelGrid>
+				</p:panelGrid>
+
+				<p:panelGrid columns="3"
+					columnClasses="ui-grid-col-4,ui-grid-col-4,ui-grid-col-4"
+					layout="grid" styleClass="ui-panelgrid-blank">
+
+					<p:panelGrid columns="2"
+						columnClasses="ui-grid-col-4,ui-grid-col-8" layout="grid"
+						styleClass="ui-panelgrid-blank">
+						<p:outputLabel for="dataFundacaoPessoaJuridica"
+							value="Data de Fundação" />
+						<p:calendar id="dataFundacaoPessoaJuridica" pattern="dd/MM/yyyy"
+							mask="true" required="true"
+							requiredMessage="Data de Fundação é um campo obrigatório"
+							locale="pt_BR"
+							value="#{pessoaJuridicaController.pessoaJuridicaForm.dataFundacao}"
+							showOn="button" />
+					</p:panelGrid>
+					<p:panelGrid columns="2"
+						columnClasses="ui-grid-col-4,ui-grid-col-8" layout="grid"
+						styleClass="ui-panelgrid-blank">
+						<p:outputLabel for="ufPessoaJuridica" value="UF" />
+						<p:selectOneMenu id="ufPessoaJuridica" converter="entityConverter"
+							value="#{pessoaJuridicaController.pessoaJuridicaForm.uf}">
+							<f:selectItem itemLabel="" itemValue="" noSelectionOption="true" />
+							<f:selectItems
+								value="${unidadeFederativaController.unidadesFederativas}"
+								var="un" itemLabel="#{un.sigla}" itemValue="#{un}" />
+							<p:ajax event="change" process="ufPessoaJuridica"
+								listener="#{pessoaJuridicaController.limparMunicipioForm()}"
+								update="municipioPessoaJuridica" />
+						</p:selectOneMenu>
+					</p:panelGrid>
+					<p:panelGrid columns="2"
+						columnClasses="ui-grid-col-4,ui-grid-col-8" layout="grid"
+						styleClass="ui-panelgrid-blank">
+						<p:outputLabel for="municipioPessoaJuridica" value="Município" />
+						<p:selectOneMenu id="municipioPessoaJuridica" required="#{pessoaJuridicaController.pessoaJuridicaForm.uf ne null}"
+							requiredMessage="Município é um campo obrigatório"
+							value="#{pessoaJuridicaController.pessoaJuridicaForm.municipio}"
+							converter="entityConverter">
+							<f:selectItem itemLabel="" itemValue="" noSelectionOption="true" />
+							<f:selectItems
+								value="${municipioController.findAll(pessoaJuridicaController.pessoaJuridicaForm.uf)}"
+								var="mun" itemLabel="#{mun.nome}" itemValue="#{mun}" />
+						</p:selectOneMenu>
+					</p:panelGrid>
+
+				</p:panelGrid>
+
+				<p:spacer />
+
+				<p:panelGrid columns="2" columnClasses="ui-grid-col-6,ui-grid-col-6"
+					layout="grid" styleClass="ui-panelgrid-blank">
+
+					<p:commandButton value="Fechar"
+						action="#{pessoaJuridicaController.limparForm()}" immediate="true"
+						update="@form" oncomplete="PF('pessoaJuridicaFormDialog').hide();" />
+
+					<p:commandButton value="Salvar" update="@form formPessoas"
+						action="#{pessoaJuridicaController.salvarPessoa()}" />
+
+				</p:panelGrid>
+			</div>
+
+		</h:form>
+	</p:dialog>
+</ui:composition>

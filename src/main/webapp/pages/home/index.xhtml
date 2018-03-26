@@ -1,0 +1,190 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head />
+<h:body style="margin : 30px;">
+
+	<ui:include src="/pages/home/pessoaJuridicaForm.xhtml" />
+	<ui:include src="/pages/home/pessoaFisicaForm.xhtml" />
+
+	<h1 style="text-align: center; font-family: sans-serif;">Cadastro
+		Corporativo</h1>
+
+	<h:form id="formPessoas">
+		<p:messages id="messages" showDetail="false" closable="true"
+			autoUpdate="true" />
+
+		<div class="ui-fluid">
+
+			<h:panelGroup id="filtroPessoaGroup">
+
+				<p:fieldset>
+
+					<p:panelGrid columns="2"
+						columnClasses="ui-grid-col-4,ui-grid-col-8" layout="grid"
+						styleClass="ui-panelgrid-blank">
+
+						<p:panelGrid columns="2"
+							columnClasses="ui-grid-col-4,ui-grid-col-8" layout="grid"
+							styleClass="ui-panelgrid-blank">
+							<p:outputLabel for="filtroTipo" value="Tipo" />
+							<p:selectOneMenu id="filtroTipo"
+								converter="tipoPessoaEnumConverter"
+								value="#{pessoaController.filtroPessoa.tipoPessoa}">
+								<f:selectItem itemLabel="" itemValue="" />
+								<f:selectItems value="${pessoaController.tiposPessoas}" var="t"
+									itemLabel="#{t.descricao}" itemValue="#{t}" />
+							</p:selectOneMenu>
+						</p:panelGrid>
+						<p:panelGrid columns="2"
+							columnClasses="ui-grid-col-4,ui-grid-col-8" layout="grid"
+							styleClass="ui-panelgrid-blank">
+							<p:outputLabel for="filtroNome" value="Nome/Razão Social" />
+							<p:inputText id="filtroNome"
+								value="#{pessoaController.filtroPessoa.nome}" />
+						</p:panelGrid>
+
+					</p:panelGrid>
+
+					<p:panelGrid columns="3"
+						columnClasses="ui-grid-col-4,ui-grid-col-4,ui-grid-col-4"
+						layout="grid" styleClass="ui-panelgrid-blank">
+
+						<p:panelGrid columns="2"
+							columnClasses="ui-grid-col-4,ui-grid-col-8" layout="grid"
+							styleClass="ui-panelgrid-blank">
+							<p:outputLabel for="filtroData" value="Data" />
+							<p:calendar id="filtroData" pattern="dd/MM/yyyy" mask="true"
+								locale="pt_BR" value="#{pessoaController.filtroPessoa.data}"
+								showOn="button" />
+						</p:panelGrid>
+						<p:panelGrid columns="2"
+							columnClasses="ui-grid-col-4,ui-grid-col-8" layout="grid"
+							styleClass="ui-panelgrid-blank">
+							<p:outputLabel for="filtroUf" value="UF" />
+							<p:selectOneMenu id="filtroUf" converter="entityConverter"
+								value="#{pessoaController.filtroPessoa.unidadeFederativa}">
+								<f:selectItem itemLabel="" itemValue="" />
+								<f:selectItems
+									value="${unidadeFederativaController.unidadesFederativas}"
+									var="un" itemLabel="#{un.sigla}" itemValue="#{un}" />
+								<p:ajax event="change" process="filtroUf"
+									listener="#{pessoaController.limparMunicipioFiltro()}"
+									update="filtroMunicipio" />
+							</p:selectOneMenu>
+						</p:panelGrid>
+						<p:panelGrid columns="2"
+							columnClasses="ui-grid-col-4,ui-grid-col-8" layout="grid"
+							styleClass="ui-panelgrid-blank">
+							<p:outputLabel for="filtroMunicipio" value="Município" />
+							<p:selectOneMenu id="filtroMunicipio"
+								value="#{pessoaController.filtroPessoa.municipio}"
+								converter="entityConverter">
+								<f:selectItem itemLabel="" itemValue="" />
+								<f:selectItems
+									value="${municipioController.findAll(pessoaController.filtroPessoa.unidadeFederativa)}"
+									var="mun" itemLabel="#{mun.nome}" itemValue="#{mun}" />
+							</p:selectOneMenu>
+						</p:panelGrid>
+
+					</p:panelGrid>
+
+				</p:fieldset>
+
+				<p:spacer />
+
+				<p:panelGrid columns="5"
+					columnClasses="ui-grid-col-2,ui-grid-col-2, ui-grid-col-2,ui-grid-col-3,ui-grid-col-3"
+					layout="grid" styleClass="ui-panelgrid-blank">
+
+					<p:commandButton value="Nova Pessoa Jurídica" immediate="true"
+						action="#{pessoaJuridicaController.limparForm()}"
+						oncomplete="PF('pessoaJuridicaFormDialog').show();"
+						update="pessoaJuridicaForm" />
+
+					<p:commandButton value="Nova Pessoa Física" immediate="true"
+						action="#{pessoaFisicaController.limparForm()}"
+						oncomplete="PF('pessoaFisicaFormDialog').show();"
+						update="pessoaFisicaForm" />
+
+					<p:commandButton value="Limpar" update="@form" immediate="true"
+						action="#{pessoaController.limparFiltro()}" />
+
+					<p:commandButton id="idButtonDownload" ajax="false"
+						update="@form"
+						value="Download" process="@form">
+						<p:fileDownload
+							value="#{pessoaController.buildRelatorio()}" />
+					</p:commandButton>
+
+					<p:commandButton value="Buscar" update="@form"
+						action="#{pessoaController.buscar()}" />
+
+				</p:panelGrid>
+
+			</h:panelGroup>
+
+			<p:spacer />
+
+			<p:dataTable var="p" emptyMessage="Nenhuma pessoa encontrada"
+				value="#{pessoaController.pessoas}" reflow="true" rowKey="#{p.id}"
+				lazy="true" paginator="true" paginatorPosition="bottom" rows="15">
+				<p:column headerText="Tipo">
+					<h:outputText value="#{p.tipoPessoa.descricao}" />
+				</p:column>
+				<p:column headerText="Nome/Razão Social">
+					<h:outputText value="#{p.nome}" />
+				</p:column>
+				<p:column headerText="Nascimento/Fundação" width="20%">
+					<h:outputText value="#{p.dataNascimento.time}">
+						<f:convertDateTime pattern="dd/MM/yyyy" />
+					</h:outputText>
+				</p:column>
+				<p:column headerText="Município">
+					<h:outputText value="#{p.municipio.nome}" />
+				</p:column>
+				<p:column headerText="UF" width="15%">
+					<h:outputText value="#{p.municipio.unidadeFederativa.sigla}" />
+				</p:column>
+				<p:column headerText="Ações">
+
+					<h:panelGroup rendered="#{not p.isPessoaFisica()}">
+						<p:panelGrid columns="2"
+							columnClasses="ui-grid-col-6,ui-grid-col-6" layout="grid"
+							styleClass="ui-panelgrid-blank">
+
+							<p:commandButton value="Excluir" update="@form"
+								action="#{pessoaJuridicaController.deletePessoa(p)}" />
+							<p:commandButton value="Editar"
+								oncomplete="PF('pessoaJuridicaFormDialog').show();"
+								update="pessoaJuridicaForm @form"
+								action="#{pessoaJuridicaController.editPessoa(p)}" />
+						</p:panelGrid>
+
+					</h:panelGroup>
+
+					<h:panelGroup rendered="#{p.isPessoaFisica()}">
+						<p:panelGrid columns="2"
+							columnClasses="ui-grid-col-6,ui-grid-col-6" layout="grid"
+							styleClass="ui-panelgrid-blank">
+
+							<p:commandButton value="Excluir" update="@form"
+								action="#{pessoaFisicaController.deletePessoa(p)}" />
+							<p:commandButton value="Editar"
+								oncomplete="PF('pessoaFisicaFormDialog').show();"
+								update="pessoaFisicaForm @form"
+								action="#{pessoaFisicaController.editPessoa(p)}" />
+						</p:panelGrid>
+
+					</h:panelGroup>
+
+				</p:column>
+			</p:dataTable>
+		</div>
+	</h:form>
+</h:body>
+</html>
